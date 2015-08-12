@@ -25,6 +25,7 @@ require "test-unit"
 
 $LOAD_PATH.unshift(lib_dir)
 
+ENV["TZ"] = "Asia/Tokyo"
 ENV["TEST_UNIT_MAX_DIFF_TARGET_STRING_SIZE"] ||= "5000"
 
 exit(Test::Unit::AutoRunner.run(true, test_dir))
