@@ -1,0 +1,8 @@
+/test/.test-result/
+/pkg/
+/.yardoc/
+/doc/reference/
+/doc/html/
+/doc/po/*.pot
+/doc/po/*/
+/Gemfile.lock
