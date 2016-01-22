@@ -135,7 +135,7 @@ columns:
 You can use `groonga-query-log` filter for parsing raw Groonga's query
 log text.
 
-Here is an example raw Groonga's query log text:
+Here is a sample raw Groonga's query log text:
 
     2015-08-12 15:50:40.130990|0x7fb07d113da0|>/d/select?table=Entries&match_columns=name&query=xml
     2015-08-12 15:50:40.296165|0x7fb07d113da0|:000000165177838 filter(10)
@@ -204,8 +204,8 @@ Here are parameters of this filter:
     * Default: `0.1`
 
   * `slow_response_threshold`: It specifies threshold to treat a
-    request is slow. If a request for a query spends more than the
-    threshold, the query is slow query.
+    request is slow. If a request spends more than the threshold, the
+    query in the request is slow query.
     * Default: `0.2`
 
   * `flatten`: It specifies whether parsed query log is mapped to a
