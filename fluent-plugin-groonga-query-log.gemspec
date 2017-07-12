@@ -33,7 +33,7 @@ Gem::Specification.new do |spec|
   spec.test_files += Dir.glob("test/**/*")
   spec.require_paths = ["lib"]
 
-  spec.add_runtime_dependency("fluentd")
+  spec.add_runtime_dependency("fluentd", ">= 0.14.0")
   spec.add_runtime_dependency("groonga-query-log")
 
   spec.add_development_dependency("rake")
