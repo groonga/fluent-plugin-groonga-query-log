@@ -231,5 +231,97 @@ class GroongaQueryLogFilterTest < Test::Unit::TestCase
       CONFIGURATION
       assert_equal([[@now, statistic]], event_stream.to_a)
     end
+
+    test "slow_operation_threshold" do
+      messages = [
+        "2017-07-12 15:00:00.000000|0x7fb07d113da0|>/d/select?table=Entries&match_columns=name&query=xml",
+        "2017-07-12 15:00:00.100000|0x7fb07d113da0|:000000010000000 filter(10)",
+        "2017-07-12 15:00:00.200000|0x7fb07d113da0|:000000020000000 select(10)",
+        "2017-07-12 15:00:00.300000|0x7fb07d113da0|:000000030000000 output(10)",
+        "2017-07-12 15:00:00.400000|0x7fb07d113da0|<000000040000000 rc=0",
+      ]
+      statistics = {
+        "start_time" => "2017-07-12T06:00:00.000000Z",
+        "last_time" => "2017-07-12T06:00:00.040000Z",
+        "elapsed" => 0.04,
+        "return_code" => 0,
+        "slow" => false,
+        "command" => {
+          "name"=>"select",
+          "parameters" => [
+            {"key" => :table, "value" => "Entries"},
+            {"key" => :match_columns, "value" => "name"},
+            {"key" => :query, "value" => "xml"}
+          ],
+          "raw" => "/d/select?table=Entries&match_columns=name&query=xml"},
+         "operations" => [
+          {"context" => "query: xml",
+           "name" => "filter",
+           "relative_elapsed" => 0.01,
+           "slow" => true
+          },
+          {
+            "context" => nil,
+            "name" => "select",
+            "relative_elapsed" => 0.01,
+            "slow" => true
+          },
+          {
+            "context" => nil,
+            "name" => "output",
+            "relative_elapsed" => 0.01,
+            "slow" => true
+          }
+        ],
+      }
+      event_stream = emit("slow_operation_threshold 0.01", messages)
+      assert_equal([[@now, statistics]], event_stream.to_a)
+    end
+
+    test "slow_response_threshold" do
+      messages = [
+        "2017-07-12 15:00:00.000000|0x7fb07d113da0|>/d/select?table=Entries&match_columns=name&query=xml",
+        "2017-07-12 15:00:00.100000|0x7fb07d113da0|:000000010000000 filter(10)",
+        "2017-07-12 15:00:00.200000|0x7fb07d113da0|:000000020000000 select(10)",
+        "2017-07-12 15:00:00.300000|0x7fb07d113da0|:000000030000000 output(10)",
+        "2017-07-12 15:00:00.400000|0x7fb07d113da0|<000000040000000 rc=0",
+      ]
+      statistics = {
+        "start_time" => "2017-07-12T06:00:00.000000Z",
+        "last_time" => "2017-07-12T06:00:00.040000Z",
+        "elapsed" => 0.04,
+        "return_code" => 0,
+        "slow" => true,
+        "command" => {
+          "name"=>"select",
+          "parameters" => [
+            {"key" => :table, "value" => "Entries"},
+            {"key" => :match_columns, "value" => "name"},
+            {"key" => :query, "value" => "xml"}
+          ],
+          "raw" => "/d/select?table=Entries&match_columns=name&query=xml"},
+         "operations" => [
+          {"context" => "query: xml",
+           "name" => "filter",
+           "relative_elapsed" => 0.01,
+           "slow" => false
+          },
+          {
+            "context" => nil,
+            "name" => "select",
+            "relative_elapsed" => 0.01,
+            "slow" => false
+          },
+          {
+            "context" => nil,
+            "name" => "output",
+            "relative_elapsed" => 0.01,
+            "slow" => false
+          }
+        ],
+      }
+      event_stream = emit("slow_response_threshold 0.01", messages)
+      assert_equal([[@now, statistics]], event_stream.to_a)
+    end
   end
 end
