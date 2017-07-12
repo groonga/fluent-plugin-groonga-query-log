@@ -30,7 +30,11 @@ module Fluent
     def configure(conf)
       super
 
-      @parser = Groonga::QueryLog::Parser.new
+      options = {
+        :slow_operation_threshold => @slow_operation_threshold,
+        :slow_response_threshold => @slow_response_threshold,
+      }
+      @parser = Groonga::QueryLog::Parser.new(options)
     end
 
     def filter_stream(tag, event_stream)
