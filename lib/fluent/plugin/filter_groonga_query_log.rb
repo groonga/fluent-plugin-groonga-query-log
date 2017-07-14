@@ -16,10 +16,11 @@
 require "time"
 
 require "groonga/query-log"
+require "fluent/plugin/filter"
 
-module Fluent
+module Fluent::Plugin
   class GroongaQueryLogFilter < Filter
-    Plugin.register_filter("groonga_query_log", self)
+    Fluent::Plugin.register_filter("groonga_query_log", self)
 
     config_param :raw_data_column_name,     :string, :default => "message"
     config_param :slow_operation_threshold, :float,  :default => 0.1
@@ -38,7 +39,7 @@ module Fluent
     end
 
     def filter_stream(tag, event_stream)
-      statistics_event_stream = MultiEventStream.new
+      statistics_event_stream = Fluent::MultiEventStream.new
       event_stream.each do |time, record|
         raw_data = record[@raw_data_column_name]
         next if raw_data.nil?

@@ -14,19 +14,23 @@
 # along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
 require "fluent/test"
+require "fluent/test/driver/filter"
+require "fluent/test/helpers"
 require "fluent/plugin/filter_groonga_query_log"
 
 class GroongaQueryLogFilterTest < Test::Unit::TestCase
+  include Fluent::Test::Helpers
+
   setup do
     Fluent::Test.setup
-    @now = Time.parse("2015-08-12T08:45:42Z").to_i
+    @now = event_time("2015-08-12T08:45:42Z")
     Fluent::Engine.now = @now
   end
 
   private
   def create_driver(configuration)
-    driver = Fluent::Test::FilterTestDriver.new(Fluent::GroongaQueryLogFilter)
-    driver.configure(configuration, true)
+    driver = Fluent::Test::Driver::Filter.new(Fluent::Plugin::GroongaQueryLogFilter)
+    driver.configure(configuration)
     driver
   end
 
@@ -84,9 +88,9 @@ class GroongaQueryLogFilterTest < Test::Unit::TestCase
   sub_test_case "filter_stream" do
     def emit(configuration, messages)
       driver = create_driver(configuration)
-      driver.run do
+      driver.run(default_tag: "test") do
         messages.each do |message|
-          driver.emit({"message" => message}, @now)
+          driver.feed(@now, {"message" => message})
         end
       end
       driver.filtered
