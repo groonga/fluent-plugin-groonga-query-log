@@ -1,7 +1,13 @@
 notifications:
-  recipients:
-    - groonga-commit@lists.sourceforge.jp
+  webhooks:
+    - https://webhook.commit-email.info/
+
 rvm:
-  - 2.0
-  - 2.1
-  - 2.2
+  - 2.3.8
+  - 2.4.5
+  - 2.5.3
+  - 2.6
+
+gemfile:
+  - gemfiles/fluentd-0.12.gemfile
+  - Gemfile
