@@ -1,4 +1,4 @@
-# Copyright (C) 2015  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2015-2018  Kouhei Sutou <kou@clear-code.com>
 #
 # This library is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
@@ -15,7 +15,7 @@
 
 require "time"
 
-require "groonga/query-log"
+require "groonga-query-log"
 
 module Fluent
   class GroongaQueryLogFilter < Filter
@@ -34,7 +34,7 @@ module Fluent
         :slow_operation_threshold => @slow_operation_threshold,
         :slow_response_threshold => @slow_response_threshold,
       }
-      @parser = Groonga::QueryLog::Parser.new(options)
+      @parser = GroongaQueryLog::Parser.new(options)
     end
 
     def filter_stream(tag, event_stream)
