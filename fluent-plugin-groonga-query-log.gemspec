@@ -1,6 +1,6 @@
 # -*- mode: ruby -*-
 #
-# Copyright (C) 2015  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2015-2018  Kouhei Sutou <kou@clear-code.com>
 #
 # This library is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
@@ -34,7 +34,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_runtime_dependency("fluentd")
-  spec.add_runtime_dependency("groonga-query-log")
+  spec.add_runtime_dependency("groonga-query-log", ">= 1.2.9")
 
   spec.add_development_dependency("rake")
   spec.add_development_dependency("bundler")
