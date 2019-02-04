@@ -62,7 +62,7 @@ module Fluent
     end
 
     def format_time(time)
-      time.utc.iso8601(6)
+      time.utc.localtime.iso8601(6)
     end
 
     def flatten_record!(record)

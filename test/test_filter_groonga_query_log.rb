@@ -112,8 +112,8 @@ class GroongaQueryLogFilterTest < Test::Unit::TestCase
         "2015-08-12 15:50:41.228317|0x7fb07d113da0|<000001097334986 rc=0",
       ]
       statistic = {
-        "start_time"  => "2015-08-12T06:50:40.130990Z",
-        "last_time"   => "2015-08-12T06:50:41.228324Z",
+        "start_time"  => "2015-08-12T15:50:40.130990+09:00",
+        "last_time"   => "2015-08-12T15:50:41.228324+09:00",
         "elapsed"     => 1.0973349860000001,
         "return_code" => 0,
         "slow"        => true,
@@ -160,8 +160,8 @@ class GroongaQueryLogFilterTest < Test::Unit::TestCase
         "2015-08-12 15:50:41.228317|0x7fb07d113da0|<000001097334986 rc=0",
       ]
       statistic = {
-        "start_time"                     => "2015-08-12T06:50:40.130990Z",
-        "last_time"                      => "2015-08-12T06:50:41.228324Z",
+        "start_time"                     => "2015-08-12T15:50:40.130990+09:00",
+        "last_time"                      => "2015-08-12T15:50:41.228324+09:00",
         "elapsed"                        => 1.0973349860000001,
         "return_code"                    => 0,
         "slow"                           => true,
@@ -199,8 +199,8 @@ class GroongaQueryLogFilterTest < Test::Unit::TestCase
         "2015-08-12 15:50:41.228317|0x7fb07d113da0|<000001097334986 rc=0",
       ]
       statistic = {
-        "start_time"                     => "2015-08-12T06:50:40.130990Z",
-        "last_time"                      => "2015-08-12T06:50:41.228324Z",
+        "start_time"                     => "2015-08-12T15:50:40.130990+09:00",
+        "last_time"                      => "2015-08-12T15:50:41.228324+09:00",
         "elapsed"                        => 1.0973349860000001,
         "return_code"                    => 0,
         "slow"                           => true,
@@ -241,8 +241,8 @@ class GroongaQueryLogFilterTest < Test::Unit::TestCase
         "2017-07-12 15:00:00.400000|0x7fb07d113da0|<000000040000000 rc=0",
       ]
       statistics = {
-        "start_time" => "2017-07-12T06:00:00.000000Z",
-        "last_time" => "2017-07-12T06:00:00.040000Z",
+        "start_time" => "2017-07-12T15:00:00.000000+09:00",
+        "last_time" => "2017-07-12T15:00:00.040000+09:00",
         "elapsed" => 0.04,
         "return_code" => 0,
         "slow" => false,
@@ -287,8 +287,8 @@ class GroongaQueryLogFilterTest < Test::Unit::TestCase
         "2017-07-12 15:00:00.400000|0x7fb07d113da0|<000000040000000 rc=0",
       ]
       statistics = {
-        "start_time" => "2017-07-12T06:00:00.000000Z",
-        "last_time" => "2017-07-12T06:00:00.040000Z",
+        "start_time" => "2017-07-12T15:00:00.000000+09:00",
+        "last_time" => "2017-07-12T15:00:00.040000+09:00",
         "elapsed" => 0.04,
         "return_code" => 0,
         "slow" => true,
