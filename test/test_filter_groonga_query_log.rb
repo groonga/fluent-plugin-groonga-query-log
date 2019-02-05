@@ -40,6 +40,7 @@ class GroongaQueryLogFilterTest < Test::Unit::TestCase
                      :slow_response_threshold  => 0.2,
                      :flatten                  => false,
                      :flatten_separator        => nil,
+                     :timezone                 => "utc",
                    },
                    {
                      :raw_data_column_name     => filter.raw_data_column_name,
@@ -47,6 +48,7 @@ class GroongaQueryLogFilterTest < Test::Unit::TestCase
                      :slow_response_threshold  => filter.slow_response_threshold,
                      :flatten                  => filter.flatten,
                      :flatten_separator        => filter.flatten_separator,
+                     :timezone                 => filter.timezone,
                    })
     end
 
@@ -78,6 +80,12 @@ class GroongaQueryLogFilterTest < Test::Unit::TestCase
       driver = create_driver("flatten_separator _")
       filter = driver.instance
       assert_equal("_", filter.flatten_separator)
+    end
+
+    test "timezone" do
+      driver = create_driver("timezone localtime")
+      filter = driver.instance
+      assert_equal("localtime", filter.timezone)
     end
   end
 
@@ -112,8 +120,8 @@ class GroongaQueryLogFilterTest < Test::Unit::TestCase
         "2015-08-12 15:50:41.228317|0x7fb07d113da0|<000001097334986 rc=0",
       ]
       statistic = {
-        "start_time"  => "2015-08-12T15:50:40.130990+09:00",
-        "last_time"   => "2015-08-12T15:50:41.228324+09:00",
+        "start_time"  => "2015-08-12T06:50:40.130990Z",
+        "last_time"   => "2015-08-12T06:50:41.228324Z",
         "elapsed"     => 1.0973349860000001,
         "return_code" => 0,
         "slow"        => true,
@@ -160,8 +168,8 @@ class GroongaQueryLogFilterTest < Test::Unit::TestCase
         "2015-08-12 15:50:41.228317|0x7fb07d113da0|<000001097334986 rc=0",
       ]
       statistic = {
-        "start_time"                     => "2015-08-12T15:50:40.130990+09:00",
-        "last_time"                      => "2015-08-12T15:50:41.228324+09:00",
+        "start_time"                     => "2015-08-12T06:50:40.130990Z",
+        "last_time"                      => "2015-08-12T06:50:41.228324Z",
         "elapsed"                        => 1.0973349860000001,
         "return_code"                    => 0,
         "slow"                           => true,
@@ -199,8 +207,8 @@ class GroongaQueryLogFilterTest < Test::Unit::TestCase
         "2015-08-12 15:50:41.228317|0x7fb07d113da0|<000001097334986 rc=0",
       ]
       statistic = {
-        "start_time"                     => "2015-08-12T15:50:40.130990+09:00",
-        "last_time"                      => "2015-08-12T15:50:41.228324+09:00",
+        "start_time"                     => "2015-08-12T06:50:40.130990Z",
+        "last_time"                      => "2015-08-12T06:50:41.228324Z",
         "elapsed"                        => 1.0973349860000001,
         "return_code"                    => 0,
         "slow"                           => true,
@@ -241,8 +249,8 @@ class GroongaQueryLogFilterTest < Test::Unit::TestCase
         "2017-07-12 15:00:00.400000|0x7fb07d113da0|<000000040000000 rc=0",
       ]
       statistics = {
-        "start_time" => "2017-07-12T15:00:00.000000+09:00",
-        "last_time" => "2017-07-12T15:00:00.040000+09:00",
+        "start_time" => "2017-07-12T06:00:00.000000Z",
+        "last_time" => "2017-07-12T06:00:00.040000Z",
         "elapsed" => 0.04,
         "return_code" => 0,
         "slow" => false,
@@ -287,8 +295,8 @@ class GroongaQueryLogFilterTest < Test::Unit::TestCase
         "2017-07-12 15:00:00.400000|0x7fb07d113da0|<000000040000000 rc=0",
       ]
       statistics = {
-        "start_time" => "2017-07-12T15:00:00.000000+09:00",
-        "last_time" => "2017-07-12T15:00:00.040000+09:00",
+        "start_time" => "2017-07-12T06:00:00.000000Z",
+        "last_time" => "2017-07-12T06:00:00.040000Z",
         "elapsed" => 0.04,
         "return_code" => 0,
         "slow" => true,
@@ -322,6 +330,54 @@ class GroongaQueryLogFilterTest < Test::Unit::TestCase
       }
       event_stream = emit("slow_response_threshold 0.01", messages)
       assert_equal([[@now, statistics]], event_stream.to_a)
+    end
+
+    test "timezone" do
+      messages = [
+        "2015-08-12 15:50:40.130990|0x7fb07d113da0|>/d/select?table=Entries&match_columns=name&query=xml",
+        "2015-08-12 15:50:40.296165|0x7fb07d113da0|:000000165177838 filter(10)",
+        "2015-08-12 15:50:40.296172|0x7fb07d113da0|:000000165184723 select(10)",
+        "2015-08-12 15:50:41.228129|0x7fb07d113da0|:000001097153433 output(10)",
+        "2015-08-12 15:50:41.228317|0x7fb07d113da0|<000001097334986 rc=0",
+      ]
+      statistic = {
+        "start_time"  => "2015-08-12T15:50:40.130990+09:00",
+        "last_time"   => "2015-08-12T15:50:41.228324+09:00",
+        "elapsed"     => 1.0973349860000001,
+        "return_code" => 0,
+        "slow"        => true,
+        "command" => {
+          "raw" => "/d/select?table=Entries&match_columns=name&query=xml",
+          "name" => "select",
+          "parameters" => [
+            {"key" => :table,         "value" => "Entries"},
+            {"key" => :match_columns, "value" => "name"},
+            {"key" => :query,         "value" => "xml"},
+          ],
+        },
+        "operations" => [
+          {
+            "context"          => "query: xml",
+            "name"             => "filter",
+            "relative_elapsed" => 0.165177838,
+            "slow"             => true,
+          },
+          {
+            "context"          => nil,
+            "name"             => "select",
+            "relative_elapsed" => 6.884999999999999e-06,
+            "slow"             => false,
+          },
+          {
+            "context"          => nil,
+            "name"             => "output",
+            "relative_elapsed" => 0.93196871,
+            "slow"             => true,
+          },
+        ],
+      }
+      event_stream = emit("timezone localtime", messages)
+      assert_equal([[@now, statistic]], event_stream.to_a)
     end
   end
 end

@@ -26,6 +26,7 @@ module Fluent
     config_param :slow_response_threshold,  :float,  :default => 0.2
     config_param :flatten,                  :bool,   :default => false
     config_param :flatten_separator,        :string, :default => nil
+    config_param :timezone,                 :string, :default => "utc"
 
     def configure(conf)
       super
@@ -33,6 +34,7 @@ module Fluent
       options = {
         :slow_operation_threshold => @slow_operation_threshold,
         :slow_response_threshold => @slow_response_threshold,
+        :timezone => @timezone,
       }
       @parser = GroongaQueryLog::Parser.new(options)
     end
@@ -62,7 +64,12 @@ module Fluent
     end
 
     def format_time(time)
-      time.utc.localtime.iso8601(6)
+      case @timezone
+      when "localtime"
+        time.iso8601(6)
+      else
+        time.utc.iso8601(6)
+      end
     end
 
     def flatten_record!(record)
