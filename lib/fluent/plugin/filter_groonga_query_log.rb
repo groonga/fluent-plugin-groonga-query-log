@@ -26,7 +26,9 @@ module Fluent
     config_param :slow_response_threshold,  :float,  :default => 0.2
     config_param :flatten,                  :bool,   :default => false
     config_param :flatten_separator,        :string, :default => nil
-    config_param :timezone,                 :string, :default => "utc"
+    config_param :timezone,                 :enum,
+                                            :list => [:utc, :localtime],
+                                            :default => :utc
 
     def configure(conf)
       super
@@ -65,7 +67,7 @@ module Fluent
 
     def format_time(time)
       case @timezone
-      when "localtime"
+      when :localtime
         time.iso8601(6)
       else
         time.utc.iso8601(6)

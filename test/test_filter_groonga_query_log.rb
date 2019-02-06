@@ -40,7 +40,7 @@ class GroongaQueryLogFilterTest < Test::Unit::TestCase
                      :slow_response_threshold  => 0.2,
                      :flatten                  => false,
                      :flatten_separator        => nil,
-                     :timezone                 => "utc",
+                     :timezone                 => :utc,
                    },
                    {
                      :raw_data_column_name     => filter.raw_data_column_name,
@@ -85,7 +85,7 @@ class GroongaQueryLogFilterTest < Test::Unit::TestCase
     test "timezone" do
       driver = create_driver("timezone localtime")
       filter = driver.instance
-      assert_equal("localtime", filter.timezone)
+      assert_equal(:localtime, filter.timezone)
     end
   end
 
