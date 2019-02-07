@@ -29,9 +29,7 @@ module Fluent
     config_param :timezone,                 :enum,
                                             :list => [:utc, :localtime],
                                             :default => :utc
-    config_param :time_format,              :enum,
-                                            :list => [:iso8601, :datetime],
-                                            :default => :iso8601
+    config_param :time_format,              :string, :default => "iso8601"
 
     def configure(conf)
       super
@@ -70,27 +68,23 @@ module Fluent
     end
 
     def format_time(time)
-      if localtime_with_iso8601_format?
-        time.iso8601(6)
-      elsif localtime_with_datetime_format?
-        time.strftime("%F %T.%6N")
-      elsif utc_with_datetime_format?
-        time.utc.strftime("%F %T.%6N")
+      time.utc if @timezone == :utc
+      time.strftime(format)
+    end
+
+    def format
+      case @time_format
+      when "iso8601"
+        format  = "%Y-%m-%dT%H:%M:%S.%6N"
+        if @timezone == :utc
+          format << "Z"
+        else
+          format << "%:z"
+        end
+      # We can add more shotcuts here: when "..."
       else
-        time.utc.iso8601(6)
+        @time_format
       end
-    end
-
-    def localtime_with_iso8601_format?
-      @timezone == :localtime and @time_format == :iso8601
-    end
-
-    def localtime_with_datetime_format?
-      @timezone == :localtime and @time_format == :datetime
-    end
-
-    def utc_with_datetime_format?
-      @timezone == :utc and @time_format == :datetime
     end
 
     def flatten_record!(record)
