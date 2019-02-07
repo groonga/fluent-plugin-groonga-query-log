@@ -29,6 +29,9 @@ module Fluent
     config_param :timezone,                 :enum,
                                             :list => [:utc, :localtime],
                                             :default => :utc
+    config_param :time_format,              :enum,
+                                            :list => [:iso8601, :datetime],
+                                            :default => :iso8601
 
     def configure(conf)
       super
@@ -37,6 +40,7 @@ module Fluent
         :slow_operation_threshold => @slow_operation_threshold,
         :slow_response_threshold => @slow_response_threshold,
         :timezone => @timezone,
+        :time_format => @time_format,
       }
       @parser = GroongaQueryLog::Parser.new(options)
     end
@@ -66,12 +70,27 @@ module Fluent
     end
 
     def format_time(time)
-      case @timezone
-      when :localtime
+      if localtime_with_iso8601_format?
         time.iso8601(6)
+      elsif localtime_with_datetime_format?
+        time.strftime("%F %T.%6N")
+      elsif utc_with_datetime_format?
+        time.utc.strftime("%F %T.%6N")
       else
         time.utc.iso8601(6)
       end
+    end
+
+    def localtime_with_iso8601_format?
+      @timezone == :localtime and @time_format == :iso8601
+    end
+
+    def localtime_with_datetime_format?
+      @timezone == :localtime and @time_format == :datetime
+    end
+
+    def utc_with_datetime_format?
+      @timezone == :utc and @time_format == :datetime
     end
 
     def flatten_record!(record)

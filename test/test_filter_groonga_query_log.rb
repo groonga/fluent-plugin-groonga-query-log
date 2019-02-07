@@ -41,6 +41,7 @@ class GroongaQueryLogFilterTest < Test::Unit::TestCase
                      :flatten                  => false,
                      :flatten_separator        => nil,
                      :timezone                 => :utc,
+                     :time_format              => :iso8601,
                    },
                    {
                      :raw_data_column_name     => filter.raw_data_column_name,
@@ -49,6 +50,7 @@ class GroongaQueryLogFilterTest < Test::Unit::TestCase
                      :flatten                  => filter.flatten,
                      :flatten_separator        => filter.flatten_separator,
                      :timezone                 => filter.timezone,
+                     :time_format              => filter.time_format,
                    })
     end
 
@@ -82,10 +84,16 @@ class GroongaQueryLogFilterTest < Test::Unit::TestCase
       assert_equal("_", filter.flatten_separator)
     end
 
-    test "timezone" do
+    test "localtime" do
       driver = create_driver("timezone localtime")
       filter = driver.instance
       assert_equal(:localtime, filter.timezone)
+    end
+
+    test "datetime" do
+      driver = create_driver("time_format datetime")
+      filter = driver.instance
+      assert_equal(:datetime, filter.time_format)
     end
   end
 
@@ -332,7 +340,7 @@ class GroongaQueryLogFilterTest < Test::Unit::TestCase
       assert_equal([[@now, statistics]], event_stream.to_a)
     end
 
-    test "timezone" do
+    test "localtime_of_timezone" do
       messages = [
         "2015-08-12 15:50:40.130990|0x7fb07d113da0|>/d/select?table=Entries&match_columns=name&query=xml",
         "2015-08-12 15:50:40.296165|0x7fb07d113da0|:000000165177838 filter(10)",
@@ -377,6 +385,105 @@ class GroongaQueryLogFilterTest < Test::Unit::TestCase
         ],
       }
       event_stream = emit("timezone localtime", messages)
+      assert_equal([[@now, statistic]], event_stream.to_a)
+    end
+
+    test "datetime_of_time_format" do
+      messages = [
+        "2015-08-12 15:50:40.130990|0x7fb07d113da0|>/d/select?table=Entries&match_columns=name&query=xml",
+        "2015-08-12 15:50:40.296165|0x7fb07d113da0|:000000165177838 filter(10)",
+        "2015-08-12 15:50:40.296172|0x7fb07d113da0|:000000165184723 select(10)",
+        "2015-08-12 15:50:41.228129|0x7fb07d113da0|:000001097153433 output(10)",
+        "2015-08-12 15:50:41.228317|0x7fb07d113da0|<000001097334986 rc=0",
+      ]
+      statistic = {
+        "start_time"  => "2015-08-12 06:50:40.130990",
+        "last_time"   => "2015-08-12 06:50:41.228324",
+        "elapsed"     => 1.0973349860000001,
+        "return_code" => 0,
+        "slow"        => true,
+        "command" => {
+          "raw" => "/d/select?table=Entries&match_columns=name&query=xml",
+          "name" => "select",
+          "parameters" => [
+            {"key" => :table,         "value" => "Entries"},
+            {"key" => :match_columns, "value" => "name"},
+            {"key" => :query,         "value" => "xml"},
+          ],
+        },
+        "operations" => [
+          {
+            "context"          => "query: xml",
+            "name"             => "filter",
+            "relative_elapsed" => 0.165177838,
+            "slow"             => true,
+          },
+          {
+            "context"          => nil,
+            "name"             => "select",
+            "relative_elapsed" => 6.884999999999999e-06,
+            "slow"             => false,
+          },
+          {
+            "context"          => nil,
+            "name"             => "output",
+            "relative_elapsed" => 0.93196871,
+            "slow"             => true,
+          },
+        ],
+      }
+      event_stream = emit("time_format datetime", messages)
+      assert_equal([[@now, statistic]], event_stream.to_a)
+    end
+
+    test "time_zone_is_localtime_and_format_is_datetime" do
+      messages = [
+        "2015-08-12 15:50:40.130990|0x7fb07d113da0|>/d/select?table=Entries&match_columns=name&query=xml",
+        "2015-08-12 15:50:40.296165|0x7fb07d113da0|:000000165177838 filter(10)",
+        "2015-08-12 15:50:40.296172|0x7fb07d113da0|:000000165184723 select(10)",
+        "2015-08-12 15:50:41.228129|0x7fb07d113da0|:000001097153433 output(10)",
+        "2015-08-12 15:50:41.228317|0x7fb07d113da0|<000001097334986 rc=0",
+      ]
+      statistic = {
+        "start_time"  => "2015-08-12 15:50:40.130990",
+        "last_time"   => "2015-08-12 15:50:41.228324",
+        "elapsed"     => 1.0973349860000001,
+        "return_code" => 0,
+        "slow"        => true,
+        "command" => {
+          "raw" => "/d/select?table=Entries&match_columns=name&query=xml",
+          "name" => "select",
+          "parameters" => [
+            {"key" => :table,         "value" => "Entries"},
+            {"key" => :match_columns, "value" => "name"},
+            {"key" => :query,         "value" => "xml"},
+          ],
+        },
+        "operations" => [
+          {
+            "context"          => "query: xml",
+            "name"             => "filter",
+            "relative_elapsed" => 0.165177838,
+            "slow"             => true,
+          },
+          {
+            "context"          => nil,
+            "name"             => "select",
+            "relative_elapsed" => 6.884999999999999e-06,
+            "slow"             => false,
+          },
+          {
+            "context"          => nil,
+            "name"             => "output",
+            "relative_elapsed" => 0.93196871,
+            "slow"             => true,
+          },
+        ],
+      }
+      event_stream = emit(<<-CONFIGURATION, messages)
+        timezone localtime
+        time_format datetime
+      CONFIGURATION
       assert_equal([[@now, statistic]], event_stream.to_a)
     end
   end
