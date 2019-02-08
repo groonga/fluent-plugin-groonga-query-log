@@ -440,7 +440,7 @@ class GroongaQueryLogFilterTest < Test::Unit::TestCase
       end
     end
 
-    test "timezone time_format" do
+    test "timezone and time_format" do
       messages = [
         "2015-08-12 15:50:40.130990|0x7fb07d113da0|>/d/select?table=Entries&match_columns=name&query=xml",
         "2015-08-12 15:50:40.296165|0x7fb07d113da0|:000000165177838 filter(10)",
