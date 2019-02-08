@@ -17,7 +17,7 @@
 
 Gem::Specification.new do |spec|
   spec.name = "fluent-plugin-groonga-query-log"
-  spec.version = "1.0.1"
+  spec.version = "1.0.2"
   spec.authors = ["Kouhei Sutou"]
   spec.email = ["kou@clear-code.com"]
   spec.summary = "Fluentd plugin to parse Groonga's query log."
