@@ -75,15 +75,14 @@ module Fluent
     def resolve_time_format
       case @time_format
       when "iso8601"
-        format  = "%Y-%m-%dT%H:%M:%S.%6N"
+        format = "%Y-%m-%dT%H:%M:%S.%6N"
         if @timezone == :utc
           format << "Z"
         else
           format << "%:z"
         end
       when "sql"
-        format  = "%Y-%m-%d %H:%M:%S.%6N"
-      # We can add more shotcuts here: when "..."
+        format = "%Y-%m-%d %H:%M:%S.%6N"
       else
         @time_format
       end
