@@ -1,5 +1,13 @@
 # News
 
+## 1.0.2: 2019-02-08
+
+### Improvements
+
+  * Added a new parameter `timezone`.
+
+  * Added a new parameter `time_format`.
+
 ## 1.0.1: 2019-01-09
 
 ### Improvements
