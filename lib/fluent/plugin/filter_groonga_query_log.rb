@@ -81,6 +81,8 @@ module Fluent
         else
           format << "%:z"
         end
+      when "sql"
+        format  = "%Y-%m-%d %H:%M:%S.%6N"
       # We can add more shotcuts here: when "..."
       else
         @time_format

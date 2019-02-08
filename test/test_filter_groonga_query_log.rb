@@ -391,6 +391,54 @@ class GroongaQueryLogFilterTest < Test::Unit::TestCase
     end
 
     sub_test_case "time_format" do
+      test "sql" do
+        messages = [
+          "2015-08-12 15:50:40.130990|0x7fb07d113da0|>/d/select?table=Entries&match_columns=name&query=xml",
+          "2015-08-12 15:50:40.296165|0x7fb07d113da0|:000000165177838 filter(10)",
+          "2015-08-12 15:50:40.296172|0x7fb07d113da0|:000000165184723 select(10)",
+          "2015-08-12 15:50:41.228129|0x7fb07d113da0|:000001097153433 output(10)",
+          "2015-08-12 15:50:41.228317|0x7fb07d113da0|<000001097334986 rc=0",
+        ]
+        statistic = {
+          "start_time"  => "2015-08-12 06:50:40.130990",
+          "last_time"   => "2015-08-12 06:50:41.228324",
+          "elapsed"     => 1.0973349860000001,
+          "return_code" => 0,
+          "slow"        => true,
+          "command" => {
+            "raw" => "/d/select?table=Entries&match_columns=name&query=xml",
+            "name" => "select",
+            "parameters" => [
+              {"key" => :table,         "value" => "Entries"},
+              {"key" => :match_columns, "value" => "name"},
+              {"key" => :query,         "value" => "xml"},
+            ],
+          },
+          "operations" => [
+            {
+              "context"          => "query: xml",
+              "name"             => "filter",
+              "relative_elapsed" => 0.165177838,
+              "slow"             => true,
+            },
+            {
+              "context"          => nil,
+              "name"             => "select",
+              "relative_elapsed" => 6.884999999999999e-06,
+              "slow"             => false,
+            },
+            {
+              "context"          => nil,
+              "name"             => "output",
+              "relative_elapsed" => 0.93196871,
+              "slow"             => true,
+            },
+          ],
+        }
+        event_stream = emit("time_format sql", messages)
+        assert_equal([[@now, statistic]], event_stream.to_a)
+      end
+
       test "string" do
         messages = [
           "2015-08-12 15:50:40.130990|0x7fb07d113da0|>/d/select?table=Entries&match_columns=name&query=xml",
@@ -438,57 +486,108 @@ class GroongaQueryLogFilterTest < Test::Unit::TestCase
         event_stream = emit("time_format %Y-%m-%d %H:%M:%S.%6N", messages)
         assert_equal([[@now, statistic]], event_stream.to_a)
       end
-    end
 
-    test "timezone and time_format" do
-      messages = [
-        "2015-08-12 15:50:40.130990|0x7fb07d113da0|>/d/select?table=Entries&match_columns=name&query=xml",
-        "2015-08-12 15:50:40.296165|0x7fb07d113da0|:000000165177838 filter(10)",
-        "2015-08-12 15:50:40.296172|0x7fb07d113da0|:000000165184723 select(10)",
-        "2015-08-12 15:50:41.228129|0x7fb07d113da0|:000001097153433 output(10)",
-        "2015-08-12 15:50:41.228317|0x7fb07d113da0|<000001097334986 rc=0",
-      ]
-      statistic = {
-        "start_time"  => "2015-08-12 15:50:40.130990",
-        "last_time"   => "2015-08-12 15:50:41.228324",
-        "elapsed"     => 1.0973349860000001,
-        "return_code" => 0,
-        "slow"        => true,
-        "command" => {
-          "raw" => "/d/select?table=Entries&match_columns=name&query=xml",
-          "name" => "select",
-          "parameters" => [
-            {"key" => :table,         "value" => "Entries"},
-            {"key" => :match_columns, "value" => "name"},
-            {"key" => :query,         "value" => "xml"},
+      test "sql and localtime" do
+        messages = [
+          "2015-08-12 15:50:40.130990|0x7fb07d113da0|>/d/select?table=Entries&match_columns=name&query=xml",
+          "2015-08-12 15:50:40.296165|0x7fb07d113da0|:000000165177838 filter(10)",
+          "2015-08-12 15:50:40.296172|0x7fb07d113da0|:000000165184723 select(10)",
+          "2015-08-12 15:50:41.228129|0x7fb07d113da0|:000001097153433 output(10)",
+          "2015-08-12 15:50:41.228317|0x7fb07d113da0|<000001097334986 rc=0",
+        ]
+        statistic = {
+          "start_time"  => "2015-08-12 15:50:40.130990",
+          "last_time"   => "2015-08-12 15:50:41.228324",
+          "elapsed"     => 1.0973349860000001,
+          "return_code" => 0,
+          "slow"        => true,
+          "command" => {
+            "raw" => "/d/select?table=Entries&match_columns=name&query=xml",
+            "name" => "select",
+            "parameters" => [
+              {"key" => :table,         "value" => "Entries"},
+              {"key" => :match_columns, "value" => "name"},
+              {"key" => :query,         "value" => "xml"},
+            ],
+          },
+          "operations" => [
+            {
+              "context"          => "query: xml",
+              "name"             => "filter",
+              "relative_elapsed" => 0.165177838,
+              "slow"             => true,
+            },
+            {
+              "context"          => nil,
+              "name"             => "select",
+              "relative_elapsed" => 6.884999999999999e-06,
+              "slow"             => false,
+            },
+            {
+              "context"          => nil,
+              "name"             => "output",
+              "relative_elapsed" => 0.93196871,
+              "slow"             => true,
+            },
           ],
-        },
-        "operations" => [
-          {
-            "context"          => "query: xml",
-            "name"             => "filter",
-            "relative_elapsed" => 0.165177838,
-            "slow"             => true,
+        }
+        event_stream = emit(<<-CONFIGURATION, messages)
+          timezone localtime
+          time_format sql
+        CONFIGURATION
+        assert_equal([[@now, statistic]], event_stream.to_a)
+      end
+
+      test "string and localtime" do
+        messages = [
+          "2015-08-12 15:50:40.130990|0x7fb07d113da0|>/d/select?table=Entries&match_columns=name&query=xml",
+          "2015-08-12 15:50:40.296165|0x7fb07d113da0|:000000165177838 filter(10)",
+          "2015-08-12 15:50:40.296172|0x7fb07d113da0|:000000165184723 select(10)",
+          "2015-08-12 15:50:41.228129|0x7fb07d113da0|:000001097153433 output(10)",
+          "2015-08-12 15:50:41.228317|0x7fb07d113da0|<000001097334986 rc=0",
+        ]
+        statistic = {
+          "start_time"  => "2015-08-12 15:50:40.130990",
+          "last_time"   => "2015-08-12 15:50:41.228324",
+          "elapsed"     => 1.0973349860000001,
+          "return_code" => 0,
+          "slow"        => true,
+          "command" => {
+            "raw" => "/d/select?table=Entries&match_columns=name&query=xml",
+            "name" => "select",
+            "parameters" => [
+              {"key" => :table,         "value" => "Entries"},
+              {"key" => :match_columns, "value" => "name"},
+              {"key" => :query,         "value" => "xml"},
+            ],
           },
-          {
-            "context"          => nil,
-            "name"             => "select",
-            "relative_elapsed" => 6.884999999999999e-06,
-            "slow"             => false,
-          },
-          {
-            "context"          => nil,
-            "name"             => "output",
-            "relative_elapsed" => 0.93196871,
-            "slow"             => true,
-          },
-        ],
-      }
-      event_stream = emit(<<-CONFIGURATION, messages)
-        timezone localtime
-        time_format %Y-%m-%d %H:%M:%S.%6N
-      CONFIGURATION
-      assert_equal([[@now, statistic]], event_stream.to_a)
+          "operations" => [
+            {
+              "context"          => "query: xml",
+              "name"             => "filter",
+              "relative_elapsed" => 0.165177838,
+              "slow"             => true,
+            },
+            {
+              "context"          => nil,
+              "name"             => "select",
+              "relative_elapsed" => 6.884999999999999e-06,
+              "slow"             => false,
+            },
+            {
+              "context"          => nil,
+              "name"             => "output",
+              "relative_elapsed" => 0.93196871,
+              "slow"             => true,
+            },
+          ],
+        }
+        event_stream = emit(<<-CONFIGURATION, messages)
+          timezone localtime
+          time_format %Y-%m-%d %H:%M:%S.%6N
+        CONFIGURATION
+        assert_equal([[@now, statistic]], event_stream.to_a)
+      end
     end
   end
 end
