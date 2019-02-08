@@ -69,10 +69,10 @@ module Fluent
 
     def format_time(time)
       time.utc if @timezone == :utc
-      time.strftime(format)
+      time.strftime(resolve_time_format)
     end
 
-    def format
+    def resolve_time_format
       case @time_format
       when "iso8601"
         format  = "%Y-%m-%dT%H:%M:%S.%6N"
