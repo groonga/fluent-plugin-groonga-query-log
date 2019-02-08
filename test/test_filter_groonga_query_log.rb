@@ -84,13 +84,13 @@ class GroongaQueryLogFilterTest < Test::Unit::TestCase
       assert_equal("_", filter.flatten_separator)
     end
 
-    test "localtime" do
+    test "timezone" do
       driver = create_driver("timezone localtime")
       filter = driver.instance
       assert_equal(:localtime, filter.timezone)
     end
 
-    test "string" do
+    test "time_format" do
       driver = create_driver("time_format %Y-%m-%d %H:%M:%S.%6N")
       filter = driver.instance
       assert_equal("%Y-%m-%d %H:%M:%S.%6N", filter.time_format)
