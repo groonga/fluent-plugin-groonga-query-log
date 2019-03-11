@@ -49,6 +49,7 @@ module Fluent
         raw_data = record[@raw_data_column_name]
         next if raw_data.nil?
         @parser.parse(raw_data) do |statistic|
+          next if statistic.command.nil?
           statistic_record = create_record(statistic)
           statistics_event_stream.add(time, statistic_record)
         end

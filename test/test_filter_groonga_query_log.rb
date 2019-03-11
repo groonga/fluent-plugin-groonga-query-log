@@ -588,6 +588,16 @@ class GroongaQueryLogFilterTest < Test::Unit::TestCase
         CONFIGURATION
         assert_equal([[@now, statistic]], event_stream.to_a)
       end
+
+      test "document root" do
+        messages = [
+          "2015-08-12 15:50:40.130990|0x7fb07d113da0|>/",
+          "2015-08-12 15:50:41.228317|0x7fb07d113da0|<000001097334986 rc=0",
+        ]
+        event_stream = emit(<<-CONFIGURATION, messages)
+        CONFIGURATION
+        assert_equal([], event_stream.to_a)
+      end
     end
   end
 end
