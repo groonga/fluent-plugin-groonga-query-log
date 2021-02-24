@@ -17,7 +17,7 @@ jobs:
           - gemfiles/fluentd-0.12.gemfile
           - Gemfile
     env:
-      GEMFILE: ${{ matrix.gemfile }}
+      BUNDLE_GEMFILE: ${{ matrix.gemfile }}
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-ruby@v1
