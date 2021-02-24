@@ -1,4 +1,4 @@
-# Copyright (C) 2015  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2015-2021  Sutou Kouhei <kou@clear-code.com>
 #
 # This library is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
@@ -131,6 +131,7 @@ class GroongaQueryLogFilterTest < Test::Unit::TestCase
         "start_time"  => "2015-08-12T06:50:40.130990Z",
         "last_time"   => "2015-08-12T06:50:41.228324Z",
         "elapsed"     => 1.0973349860000001,
+        "end_time"    => 1439362241.228325,
         "return_code" => 0,
         "slow"        => true,
         "command" => {
@@ -145,18 +146,21 @@ class GroongaQueryLogFilterTest < Test::Unit::TestCase
         "operations" => [
           {
             "context"          => "query: xml",
+            "n_records"        => 10,
             "name"             => "filter",
             "relative_elapsed" => 0.165177838,
             "slow"             => true,
           },
           {
             "context"          => nil,
+            "n_records"        => 10,
             "name"             => "select",
             "relative_elapsed" => 6.884999999999999e-06,
             "slow"             => false,
           },
           {
             "context"          => nil,
+            "n_records"        => 10,
             "name"             => "output",
             "relative_elapsed" => 0.93196871,
             "slow"             => true,
@@ -179,6 +183,7 @@ class GroongaQueryLogFilterTest < Test::Unit::TestCase
         "start_time"                     => "2015-08-12T06:50:40.130990Z",
         "last_time"                      => "2015-08-12T06:50:41.228324Z",
         "elapsed"                        => 1.0973349860000001,
+        "end_time"                       => 1439362241.228325,
         "return_code"                    => 0,
         "slow"                           => true,
         "command.raw"                    => "/d/select?table=Entries&match_columns=name&query=xml",
@@ -190,14 +195,17 @@ class GroongaQueryLogFilterTest < Test::Unit::TestCase
         "command.parameters[2].key"      => :query,
         "command.parameters[2].value"    => "xml",
         "operations[0].context"          => "query: xml",
+        "operations[0].n_records"        => 10,
         "operations[0].name"             => "filter",
         "operations[0].relative_elapsed" => 0.165177838,
         "operations[0].slow"             => true,
         "operations[1].context"          => nil,
+        "operations[1].n_records"        => 10,
         "operations[1].name"             => "select",
         "operations[1].relative_elapsed" => 6.884999999999999e-06,
         "operations[1].slow"             => false,
         "operations[2].context"          => nil,
+        "operations[2].n_records"        => 10,
         "operations[2].name"             => "output",
         "operations[2].relative_elapsed" => 0.93196871,
         "operations[2].slow"             => true,
@@ -218,6 +226,7 @@ class GroongaQueryLogFilterTest < Test::Unit::TestCase
         "start_time"                     => "2015-08-12T06:50:40.130990Z",
         "last_time"                      => "2015-08-12T06:50:41.228324Z",
         "elapsed"                        => 1.0973349860000001,
+        "end_time"                       => 1439362241.228325,
         "return_code"                    => 0,
         "slow"                           => true,
         "command_raw"                    => "/d/select?table=Entries&match_columns=name&query=xml",
@@ -229,14 +238,17 @@ class GroongaQueryLogFilterTest < Test::Unit::TestCase
         "command_parameters_2_key"      => :query,
         "command_parameters_2_value"    => "xml",
         "operations_0_context"          => "query: xml",
+        "operations_0_n_records"        => 10,
         "operations_0_name"             => "filter",
         "operations_0_relative_elapsed" => 0.165177838,
         "operations_0_slow"             => true,
         "operations_1_context"          => nil,
+        "operations_1_n_records"        => 10,
         "operations_1_name"             => "select",
         "operations_1_relative_elapsed" => 6.884999999999999e-06,
         "operations_1_slow"             => false,
         "operations_2_context"          => nil,
+        "operations_2_n_records"        => 10,
         "operations_2_name"             => "output",
         "operations_2_relative_elapsed" => 0.93196871,
         "operations_2_slow"             => true,
@@ -260,6 +272,7 @@ class GroongaQueryLogFilterTest < Test::Unit::TestCase
         "start_time" => "2017-07-12T06:00:00.000000Z",
         "last_time" => "2017-07-12T06:00:00.040000Z",
         "elapsed" => 0.04,
+        "end_time" => 1499839200.04,
         "return_code" => 0,
         "slow" => false,
         "command" => {
@@ -269,21 +282,26 @@ class GroongaQueryLogFilterTest < Test::Unit::TestCase
             {"key" => :match_columns, "value" => "name"},
             {"key" => :query, "value" => "xml"}
           ],
-          "raw" => "/d/select?table=Entries&match_columns=name&query=xml"},
-         "operations" => [
-          {"context" => "query: xml",
-           "name" => "filter",
-           "relative_elapsed" => 0.01,
-           "slow" => true
+          "raw" => "/d/select?table=Entries&match_columns=name&query=xml"
+        },
+        "operations" => [
+          {
+            "context" => "query: xml",
+            "n_records" => 10,
+            "name" => "filter",
+            "relative_elapsed" => 0.01,
+            "slow" => true
           },
           {
             "context" => nil,
+            "n_records" => 10,
             "name" => "select",
             "relative_elapsed" => 0.01,
             "slow" => true
           },
           {
             "context" => nil,
+            "n_records" => 10,
             "name" => "output",
             "relative_elapsed" => 0.01,
             "slow" => true
@@ -306,6 +324,7 @@ class GroongaQueryLogFilterTest < Test::Unit::TestCase
         "start_time" => "2017-07-12T06:00:00.000000Z",
         "last_time" => "2017-07-12T06:00:00.040000Z",
         "elapsed" => 0.04,
+        "end_time" => 1499839200.04,
         "return_code" => 0,
         "slow" => true,
         "command" => {
@@ -315,21 +334,26 @@ class GroongaQueryLogFilterTest < Test::Unit::TestCase
             {"key" => :match_columns, "value" => "name"},
             {"key" => :query, "value" => "xml"}
           ],
-          "raw" => "/d/select?table=Entries&match_columns=name&query=xml"},
-         "operations" => [
-          {"context" => "query: xml",
-           "name" => "filter",
-           "relative_elapsed" => 0.01,
-           "slow" => false
+          "raw" => "/d/select?table=Entries&match_columns=name&query=xml"
+        },
+        "operations" => [
+          {
+            "context" => "query: xml",
+            "n_records" => 10,
+            "name" => "filter",
+            "relative_elapsed" => 0.01,
+            "slow" => false
           },
           {
             "context" => nil,
+            "n_records" => 10,
             "name" => "select",
             "relative_elapsed" => 0.01,
             "slow" => false
           },
           {
             "context" => nil,
+            "n_records" => 10,
             "name" => "output",
             "relative_elapsed" => 0.01,
             "slow" => false
@@ -353,6 +377,7 @@ class GroongaQueryLogFilterTest < Test::Unit::TestCase
           "start_time"  => "2015-08-12T15:50:40.130990+09:00",
           "last_time"   => "2015-08-12T15:50:41.228324+09:00",
           "elapsed"     => 1.0973349860000001,
+          "end_time"    => 1439362241.228325,
           "return_code" => 0,
           "slow"        => true,
           "command" => {
@@ -367,18 +392,21 @@ class GroongaQueryLogFilterTest < Test::Unit::TestCase
           "operations" => [
             {
               "context"          => "query: xml",
+              "n_records"        => 10,
               "name"             => "filter",
               "relative_elapsed" => 0.165177838,
               "slow"             => true,
             },
             {
               "context"          => nil,
+              "n_records"        => 10,
               "name"             => "select",
               "relative_elapsed" => 6.884999999999999e-06,
               "slow"             => false,
             },
             {
               "context"          => nil,
+              "n_records"        => 10,
               "name"             => "output",
               "relative_elapsed" => 0.93196871,
               "slow"             => true,
@@ -403,6 +431,7 @@ class GroongaQueryLogFilterTest < Test::Unit::TestCase
           "start_time"  => "2015-08-12 06:50:40.130990",
           "last_time"   => "2015-08-12 06:50:41.228324",
           "elapsed"     => 1.0973349860000001,
+          "end_time"    => 1439362241.228325,
           "return_code" => 0,
           "slow"        => true,
           "command" => {
@@ -417,18 +446,21 @@ class GroongaQueryLogFilterTest < Test::Unit::TestCase
           "operations" => [
             {
               "context"          => "query: xml",
+              "n_records"        => 10,
               "name"             => "filter",
               "relative_elapsed" => 0.165177838,
               "slow"             => true,
             },
             {
               "context"          => nil,
+              "n_records"        => 10,
               "name"             => "select",
               "relative_elapsed" => 6.884999999999999e-06,
               "slow"             => false,
             },
             {
               "context"          => nil,
+              "n_records"        => 10,
               "name"             => "output",
               "relative_elapsed" => 0.93196871,
               "slow"             => true,
@@ -451,6 +483,7 @@ class GroongaQueryLogFilterTest < Test::Unit::TestCase
           "start_time"  => "2015-08-12 06:50:40.130990",
           "last_time"   => "2015-08-12 06:50:41.228324",
           "elapsed"     => 1.0973349860000001,
+          "end_time"    => 1439362241.228325,
           "return_code" => 0,
           "slow"        => true,
           "command" => {
@@ -465,18 +498,21 @@ class GroongaQueryLogFilterTest < Test::Unit::TestCase
           "operations" => [
             {
               "context"          => "query: xml",
+              "n_records"        => 10,
               "name"             => "filter",
               "relative_elapsed" => 0.165177838,
               "slow"             => true,
             },
             {
               "context"          => nil,
+              "n_records"        => 10,
               "name"             => "select",
               "relative_elapsed" => 6.884999999999999e-06,
               "slow"             => false,
             },
             {
               "context"          => nil,
+              "n_records"        => 10,
               "name"             => "output",
               "relative_elapsed" => 0.93196871,
               "slow"             => true,
@@ -499,6 +535,7 @@ class GroongaQueryLogFilterTest < Test::Unit::TestCase
           "start_time"  => "2015-08-12 15:50:40.130990",
           "last_time"   => "2015-08-12 15:50:41.228324",
           "elapsed"     => 1.0973349860000001,
+          "end_time"    => 1439362241.228325,
           "return_code" => 0,
           "slow"        => true,
           "command" => {
@@ -513,18 +550,21 @@ class GroongaQueryLogFilterTest < Test::Unit::TestCase
           "operations" => [
             {
               "context"          => "query: xml",
+              "n_records"        => 10,
               "name"             => "filter",
               "relative_elapsed" => 0.165177838,
               "slow"             => true,
             },
             {
               "context"          => nil,
+              "n_records"        => 10,
               "name"             => "select",
               "relative_elapsed" => 6.884999999999999e-06,
               "slow"             => false,
             },
             {
               "context"          => nil,
+              "n_records"        => 10,
               "name"             => "output",
               "relative_elapsed" => 0.93196871,
               "slow"             => true,
@@ -550,6 +590,7 @@ class GroongaQueryLogFilterTest < Test::Unit::TestCase
           "start_time"  => "2015-08-12 15:50:40.130990",
           "last_time"   => "2015-08-12 15:50:41.228324",
           "elapsed"     => 1.0973349860000001,
+          "end_time"    => 1439362241.228325,
           "return_code" => 0,
           "slow"        => true,
           "command" => {
@@ -564,18 +605,21 @@ class GroongaQueryLogFilterTest < Test::Unit::TestCase
           "operations" => [
             {
               "context"          => "query: xml",
+              "n_records"        => 10,
               "name"             => "filter",
               "relative_elapsed" => 0.165177838,
               "slow"             => true,
             },
             {
               "context"          => nil,
+              "n_records"        => 10,
               "name"             => "select",
               "relative_elapsed" => 6.884999999999999e-06,
               "slow"             => false,
             },
             {
               "context"          => nil,
+              "n_records"        => 10,
               "name"             => "output",
               "relative_elapsed" => 0.93196871,
               "slow"             => true,
