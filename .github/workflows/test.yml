@@ -4,7 +4,7 @@ on:
   - pull_request
 jobs:
   test:
-    name: ${{ matrix.ruby-version }}
+    name: "${{ matrix.ruby-version }} (${{ matrix.gemfile }})"
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
